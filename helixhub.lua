@@ -294,15 +294,3 @@ show.MouseButton1Click:Connect(revealOnce)
 reset.MouseButton1Click:Connect(resetAll)
     end
 })
-Tab:CreateButton({
-    Name = "",
-    Callback = function()
-        
-    end
-})
-Tab:CreateButton({
-    Name = "isim",
-    Callback = function()
-        
-    end
-})
