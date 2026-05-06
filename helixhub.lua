@@ -1,4 +1,4 @@
--- // Rayfield yükleme
+-- // Rayfield UI Library Yükleme
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
@@ -7,16 +7,33 @@ local Window = Rayfield:CreateWindow({
    LoadingSubtitle = "by Helix",
    ConfigurationSaving = {
       Enabled = false
-   }
+   },
+   KeySystem = false
 })
 
-local Tab = Window:CreateTab("Main", 4483362458)
+-- // K ve M Tuş Ayarları
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed then
+        if input.KeyCode == Enum.KeyCode.K then
+            -- Rayfield menü aç/kapat (K tuşu)
+            local gui = game:GetService("CoreGui"):FindFirstChild("Rayfield")
+            if gui then
+                gui.Enabled = not gui.Enabled
+            end
+        elseif input.KeyCode == Enum.KeyCode.M then
+            -- Mouse kilidini aç/kapat (M tuşu)
+            UserInputService.MouseIconEnabled = not UserInputService.MouseIconEnabled
+        end
+    end
+end)
 
--- // 1. Invisible GUI butonu
-Tab:CreateButton({
+-- // TAB 1: MAIN (Senin eski özelliklerin)
+local MainTab = Window:CreateTab("Main", 4483362458)
+
+MainTab:CreateButton({
     Name = "Invisible GUI",
     Callback = function()
-        -- senin invisible gui kodun burda çalışıyor
         loadstring([[
             local key = Enum.KeyCode.X -- key to toggle invisibility
             local invis_on = false
@@ -164,133 +181,178 @@ Tab:CreateButton({
     end
 })
 
--- // 2. Fly GUI butonu
-Tab:CreateButton({
+MainTab:CreateButton({
     Name = "Fly GUI",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
     end
 })
 
--- // 3. Infinite Yield butonu
-Tab:CreateButton({
+MainTab:CreateButton({
     Name = "Infinite Yield",
     Callback = function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end
 })
 
-Tab:CreateButton({
+MainTab:CreateButton({
     Name = "Universal Glass Bridge GUI",
     Callback = function()
-        --// Universal Glass Bridge Path Show (Dark Theme)
-
-pcall(function() game.CoreGui.AxomGlassGUI:Destroy() end)
-
-local gui = Instance.new("ScreenGui", game.CoreGui)
-gui.Name = "AxomGlassGUI"
-gui.ResetOnSpawn = false
-
-local frame = Instance.new("Frame", gui)
-frame.Size = UDim2.new(0, 450, 0, 280)
-frame.Position = UDim2.new(0.5, -225, 0.5, -140)
-frame.BackgroundColor3 = Color3.fromRGB(25, 25, 35) -- koyu tema
-frame.BackgroundTransparency = 0.1
-frame.BorderSizePixel = 0
-frame.Active = true
-frame.Draggable = true
-
-local glow = Instance.new("UIStroke", frame)
-glow.Thickness = 2
-glow.Color = Color3.fromRGB(100, 180, 255) -- mavi glow
-glow.Transparency = 0.2
-
-Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 14)
-
-local title = Instance.new("TextLabel", frame)
-title.Text = "UNIVERSAL GLASS BRIDGE PATH SHOW | Made by Helix"
-title.Size = UDim2.new(1, -50, 0, 40)
-title.Position = UDim2.new(0, 15, 0, 5)
-title.BackgroundTransparency = 1
-title.TextColor3 = Color3.fromRGB(230, 230, 255) -- açık beyaz
-title.TextXAlignment = Enum.TextXAlignment.Left
-title.Font = Enum.Font.GothamBold
-title.TextScaled = true
-
-local close = Instance.new("TextButton", frame)
-close.Size = UDim2.new(0, 40, 0, 40)
-close.Position = UDim2.new(1, -45, 0, 5)
-close.Text = "❌"
-close.BackgroundColor3 = Color3.fromRGB(60, 20, 20) -- koyu kırmızı ton
-close.BackgroundTransparency = 0.2
-close.TextColor3 = Color3.fromRGB(255, 120, 120)
-close.Font = Enum.Font.GothamBold
-close.TextScaled = true
-Instance.new("UICorner", close).CornerRadius = UDim.new(0, 8)
-
-close.MouseButton1Click:Connect(function()
-    gui:Destroy()
-end)
-
-local function createButton(name, posY, bgColor)
-    local btn = Instance.new("TextButton", frame)
-    btn.Text = name
-    btn.Size = UDim2.new(0.8, 0, 0, 50)
-    btn.Position = UDim2.new(0.1, 0, 0, posY)
-    btn.BackgroundColor3 = bgColor
-    btn.BackgroundTransparency = 0.15
-    btn.TextColor3 = Color3.fromRGB(240, 240, 240)
-    btn.Font = Enum.Font.GothamBold
-    btn.TextScaled = true
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 10)
-    return btn
-end
-
-local show = createButton("SHOW", 70, Color3.fromRGB(20, 100, 20))   -- koyu yeşil
-local reset = createButton("UNSHOW", 140, Color3.fromRGB(120, 30, 30)) -- koyu kırmızı
-
---// Logic
-local storedParts = {}
-local alreadyMarked = {}
-
-local function revealOnce()
-    for _, v in ipairs(workspace:GetDescendants()) do
-        if (v:IsA("Part") or v:IsA("MeshPart")) and v.Size.Y < 2 then
-            if not storedParts[v] then
-                storedParts[v] = {
-                    Color = v.BrickColor,
-                    Material = v.Material,
-                    Transparency = v.Transparency
-                }
-            end
-            if not alreadyMarked[v] then
-                if v.CanCollide then
-                    v.BrickColor = BrickColor.new("Lime green")
-                    v.Material = Enum.Material.SmoothPlastic
-                    v.Transparency = 0
-                else
-                    v.BrickColor = BrickColor.new("Really red")
-                    v.Material = Enum.Material.SmoothPlastic
+        pcall(function() game.CoreGui.AxomGlassGUI:Destroy() end)
+        local gui = Instance.new("ScreenGui", game.CoreGui)
+        gui.Name = "AxomGlassGUI"
+        local frame = Instance.new("Frame", gui)
+        frame.Size = UDim2.new(0, 450, 0, 280)
+        frame.Position = UDim2.new(0.5, -225, 0.5, -140)
+        frame.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+        frame.Active = true
+        frame.Draggable = true
+        local title = Instance.new("TextLabel", frame)
+        title.Text = "GLASS BRIDGE PATH | Helix"
+        title.Size = UDim2.new(1, 0, 0, 40)
+        title.TextColor3 = Color3.fromRGB(255, 255, 255)
+        title.BackgroundTransparency = 1
+        local show = Instance.new("TextButton", frame)
+        show.Text = "SHOW"
+        show.Size = UDim2.new(0.8, 0, 0, 50)
+        show.Position = UDim2.new(0.1, 0, 0, 70)
+        show.BackgroundColor3 = Color3.fromRGB(20, 100, 20)
+        local unshow = Instance.new("TextButton", frame)
+        unshow.Text = "UNSHOW"
+        unshow.Size = UDim2.new(0.8, 0, 0, 50)
+        unshow.Position = UDim2.new(0.1, 0, 0, 140)
+        unshow.BackgroundColor3 = Color3.fromRGB(120, 30, 30)
+        local storedParts = {}
+        show.MouseButton1Click:Connect(function()
+            for _, v in ipairs(workspace:GetDescendants()) do
+                if (v:IsA("Part") or v:IsA("MeshPart")) and v.Size.Y < 2 then
+                    storedParts[v] = {Color = v.BrickColor, Trans = v.Transparency}
+                    v.BrickColor = v.CanCollide and BrickColor.new("Lime green") or BrickColor.new("Really red")
                     v.Transparency = 0
                 end
-                alreadyMarked[v] = true
+            end
+        end)
+        unshow.MouseButton1Click:Connect(function()
+            for v, data in pairs(storedParts) do
+                if v and v.Parent then v.BrickColor = data.Color v.Transparency = data.Trans end
+            end
+        end)
+    end
+})
+
+-- // TAB 2: TRAVERSAL (Yeni eklenen özellikler)
+local TraversalTab = Window:CreateTab("Traversal", 4483362458)
+
+TraversalTab:CreateButton({
+   Name = "Disable Enemies AI",
+   Callback = function()
+   for _, enemy in pairs(workspace.Enemies:GetChildren()) do
+    local enemyMain = enemy:FindFirstChild("EnemyMain")
+    if enemyMain then
+        local args = {
+            [1] = {
+                [1] = {
+                    [1] = "\24",
+                    [2] = enemyMain,
+                    [3] = math.huge
+                }
+            }
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent"):FireServer(unpack(args))
+    end
+    wait(0.05)
+end
+   end,
+})
+
+TraversalTab:CreateToggle({
+   Name = "Sigma Boi Aura",
+   CurrentValue = false,
+   Flag = "SigmaAura",
+   Callback = function(Value)
+      local ReplicatedStorage = game:GetService("ReplicatedStorage")
+      local remoteEvent = ReplicatedStorage:WaitForChild("RemoteEvent")
+      
+      -- Toggle açıkken "True", kapalıyken "False" gönderir
+      local stateStr = Value and "True" or "False"
+      
+      for i = 1, 30 do
+         local codeChar = string.char(i)
+         local args = {
+            {
+               { codeChar, stateStr }
+            }
+         }
+         pcall(function()
+            remoteEvent:FireServer(unpack(args))
+         end)
+         task.wait(0.1)
+      end
+   end,
+})
+
+TraversalTab:CreateButton({
+   Name = "Spawn Weapons",
+   Callback = function()
+      local targetRemote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvent")
+
+local weaponsToSpawn = {
+    "Bat",
+    "Knife", 
+    "Axe",
+    "Machete",
+    "Crowbar",
+    "Chainsaw",
+    "Katana",
+}
+
+for _, weaponName in pairs(weaponsToSpawn) do
+    local weapon = workspace:FindFirstChild(weaponName, true) 
+    
+    if weapon then
+        local args = {
+            {
+                {
+                    "\016",
+                    weapon
+                }
+            }
+        }
+        targetRemote:FireServer(unpack(args))
+    end
+    
+    wait(0.2)
+end
+
+local workspaceFolders = {
+    "Weapons",
+    "Tools",
+    "Items", 
+    "Drops",
+    "SpawnedItems"
+}
+
+for _, folderName in pairs(workspaceFolders) do
+    local folder = workspace:FindFirstChild(folderName)
+    if folder then
+        for _, weaponName in pairs(weaponsToSpawn) do
+            local weapon = folder:FindFirstChild(weaponName)
+            if weapon then
+                local args = {
+                    {
+                        {
+                            "\016",
+                            weapon
+                        }
+                    }
+                }
+                targetRemote:FireServer(unpack(args))
+                wait(0.2)
             end
         end
     end
 end
-
-local function resetAll()
-    for v, data in pairs(storedParts) do
-        if v and v.Parent then
-            v.BrickColor = data.Color
-            v.Material = data.Material
-            v.Transparency = data.Transparency
-        end
-        alreadyMarked[v] = nil
-    end
-end
-
-show.MouseButton1Click:Connect(revealOnce)
-reset.MouseButton1Click:Connect(resetAll)
-    end
+   end,
 })
+
+Rayfield:LoadConfiguration()
