@@ -2,8 +2,8 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "Helix Hub Universal Script",
-   LoadingTitle = "Rayfield UI",
+   Name = "Helix Hub Universal Script V2",
+   LoadingTitle = "Helix Hub",
    LoadingSubtitle = "by Helix",
    ConfigurationSaving = {
       Enabled = false
